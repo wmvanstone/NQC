@@ -1,0 +1,51 @@
+int max_1, max_3, time_count;
+task main()
+{
+  SetSensor(SENSOR_1,SENSOR_LIGHT);
+  SetSensor(SENSOR_3,SENSOR_LIGHT);
+
+  max_1 = 0;
+  max_3 = 0;
+  time_count = 0;
+
+  OnFwd(OUT_A);
+  OnRev(OUT_C);
+  do
+  {
+    Wait(10);
+    time_count = time_count + 1;
+    if (SENSOR_1 > max_1)
+    {
+      max_1 = SENSOR_1;
+    }
+    if (SENSOR_3 > max_3)
+    {
+      max_3 = SENSOR_3;
+    }
+  }
+  while (time_count < 50);
+
+  until(SENSOR_1 >= (max_1-2));
+  Off(OUT_A+OUT_C);
+
+  while (true)
+  {
+    if (SENSOR_3 > SENSOR_1)
+    {
+      OnFwd(OUT_A);
+      OnRev(OUT_C);
+      Wait(1);
+    }
+    if (SENSOR_1 > SENSOR_3)
+    {
+      OnFwd(OUT_C);
+      OnRev(OUT_A);
+      Wait(1);
+    }
+    if (SENSOR_1 == SENSOR_3)
+    {
+      OnFwd(OUT_A+OUT_C);
+      Wait(100);
+    }
+  }
+}

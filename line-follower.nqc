@@ -1,0 +1,85 @@
+int max_light, left_turns, right_turns;
+task main()
+{
+  SetSensor(SENSOR_1,SENSOR_LIGHT);
+
+  max_light = 0;
+  left_turns = 0;
+  right_turns = 0;
+
+  OnFwd(OUT_A);
+  Wait(30);
+  if (SENSOR_1 > max_light)
+  {
+    max_light = SENSOR_1;
+  }
+  OnRev(OUT_A);
+  Wait(30);
+  Off(OUT_A);
+//
+  OnFwd(OUT_C);
+  Wait(30);
+  if (SENSOR_1 > max_light)
+  {
+    max_light = SENSOR_1;
+  }
+  OnRev(OUT_C);
+  Wait(30);
+  Off(OUT_C);
+
+  while (true)
+  {
+    while (SENSOR_1 < (max_light - 10))
+    {
+      OnFwd(OUT_A);
+      OnFwd(OUT_C);
+    }
+    if (SENSOR_1 > max_light)
+    {
+      max_light = SENSOR_1;
+    }
+    if (right_turns >= left_turns)
+    {
+      if (SENSOR_1 >= (max_light - 10))
+      {
+        OnFwd(OUT_C);
+        OnRev(OUT_A);
+        Wait(10);
+        if (SENSOR_1 < (max_light - 10))
+        {
+          Wait(3);
+          right_turns = right_turns + 1;
+        }
+        else
+        {
+          OnFwd(OUT_A);
+          OnRev(OUT_C);
+          Wait(26);
+          left_turns = left_turns + 1;
+        }
+      }
+    }
+    else
+    {
+      if (SENSOR_1 >= (max_light - 10))
+      {
+        OnFwd(OUT_A);
+        OnRev(OUT_C);
+        Wait(11);
+        if (SENSOR_1 < (max_light - 10))
+        {
+          Wait(5);
+          left_turns = left_turns + 1;
+        }
+        else
+        {
+          OnFwd(OUT_C);
+          OnRev(OUT_A);
+          Wait(20);
+          right_turns = right_turns + 1;
+        }
+      }
+    }
+    Float(OUT_A+OUT_C);
+  }
+}

@@ -1,0 +1,53 @@
+int max_1, time_count, floor;
+
+task main()
+{
+  SetSensor(SENSOR_1,SENSOR_LIGHT);
+  SetSensor(SENSOR_2,SENSOR_TOUCH);
+  SetSensor(SENSOR_3,SENSOR_TOUCH);
+
+  max_1 = 0;
+  time_count = 0;
+  floor = 2;
+
+  OnFwd(OUT_B);
+  do
+  {
+    Wait(1);
+    time_count = time_count + 1;
+    if (SENSOR_1 > max_1)
+    {
+      max_1 = SENSOR_1;
+    }
+  }
+  while (time_count < 20);
+
+  until(SENSOR_1 >= (max_1-5));
+  Off(OUT_B);
+// On the first floor at this point
+  while (true)
+  {
+    if (SENSOR_2 == true) 
+    {
+      if (floor < 3)
+      {
+        OnRev(OUT_B);
+        Wait(20);
+        until(SENSOR_1 >= (max_1-5));
+        Off(OUT_B);
+        floor = floor + 1;
+      }
+    }
+    if (SENSOR_3 == true) 
+    {
+      if (floor > 0)
+      {
+        OnFwd(OUT_B);
+        Wait(20);
+        until(SENSOR_1 >= (max_1-5));
+        Off(OUT_B);
+        floor = floor - 1;
+      }
+    }
+  }
+}
